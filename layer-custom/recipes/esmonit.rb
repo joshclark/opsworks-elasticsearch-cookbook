@@ -1,8 +1,8 @@
 config_dir = "/etc/monit.d"
 
 directory config_dir do
-  owner node[:user][:username]
-  group node[:user][:username]
+  owner "root"
+  group "root"
   recursive true
 end
 
