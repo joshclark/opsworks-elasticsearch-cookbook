@@ -1,12 +1,4 @@
-config_dir = "/etc/monit.d"
-
-directory config_dir do
-  owner "root"
-  group "root"
-  recursive true
-end
-
-template "#{config_dir}/elasticsearch-monit.conf" do
+template "/etc/monit/conf.d/elasticsearch.monitrc" do
   source "elasticsearch.monitrc.conf.erb"
   mode 0440
   owner "root"
