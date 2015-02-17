@@ -15,3 +15,4 @@ cookbook 'yum-epel', '>= 0.3.4', git: 'git://github.com/opscode-cookbooks/yum-ep
 cookbook 'elasticsearch', git: 'git://github.com/elasticsearch/cookbook-elasticsearch.git', tag: '0.3.11'
 cookbook 'mongodb', git: 'git://github.com/edelight/chef-mongodb'
 cookbook 'papertrail', git: 'git://github.com/librato/papertrail-cookbook', tag: '0.0.7'
+cookbook 'ephemeral_raid', git: 'git://github.com/mdsol/ephemeral_raid_cookbook.git', tag: '0.0.5'
