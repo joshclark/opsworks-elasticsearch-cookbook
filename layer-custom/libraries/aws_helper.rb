@@ -4,7 +4,7 @@
 
 module AwsHelper
 
-  def findEphemeralDrives
+  def self.findEphemeralDrives
 
     devices =  %x{ls /dev/sd* /dev/xvd* 2> /dev/null}.split("\n")
 
