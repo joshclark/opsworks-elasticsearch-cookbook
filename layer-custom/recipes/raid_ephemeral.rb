@@ -47,27 +47,15 @@ ruby_block "format_drives" do
   block do
     devices = AwsHelper.findEphemeralDrives()
 
-    Chef::Log.info("Formatting drives #{devices.join(",")}")
+    Chef::Log.info("Clearing drives #{devices.join(",")}")
 
-    # Create one giant Linux partition per drive
-    fmtcmd=",,L\n"
-    devices.each do |dev|
-      system("umount #{dev}")
-
-      # Clear "invalid flag 0x0000 of partition table 4" by issuing a
-      # write
-      IO.popen("fdisk -c -u #{dev}", "w") do |f|
-        f.puts "w\n"
-      end
-
-      IO.popen("sfdisk -L --no-reread #{dev}", "w") do |f|
-        f.puts fmtcmd
-      end
+    devices.each do |device|
+      Chef::Log.info "Overwriting the first bytes of #{device}..."
+      system("dd if=/dev/zero of=#{device} bs=4096 count=1024")
     end
   end
 
-  # XXX: fix this
-  not_if {File.exist?("/dev/sdc1") || File.exist?("/dev/xvdc1")}
+  not_if {File.exist?("/dev/md0")}
 end
 
 package "mdadm"
