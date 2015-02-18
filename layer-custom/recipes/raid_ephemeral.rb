@@ -24,6 +24,12 @@
 # https://github.com/riptano/CassandraClusterAMI/blob/master/.startcassandra.py
 #
 
+#
+# Updated to find the ephemeral drives automatically using the techniques from
+# https://gist.github.com/joemiller/6049831
+#
+
+
 # Remove EC2 default /mnt from fstab
 ruby_block "remove_mnt_from_fstab" do
   block do
@@ -39,8 +45,7 @@ end
 
 ruby_block "format_drives" do
   block do
-    devices = %x{ls /dev/sd* /dev/xvd* 2> /dev/null}.split("\n").
-      delete_if{|d| ["/dev/sda", "/dev/sda1", "/dev/xvda", "/dev/xvda1"].include?(d)}
+    devices = AwsHelper.findEphemeralDrives()
 
     Chef::Log.info("Formatting drives #{devices.join(",")}")
 
@@ -71,8 +76,7 @@ package "xfsprogs"
 ruby_block "create_raid" do
   block do
     # Get partitions
-    parts = %x{ls /dev/sd*[0-9] /dev/xvd*[0-9] 2> /dev/null}.split("\n").
-      delete_if{|d| ["/dev/sda1", "/dev/xvda1"].include?(d)}
+    parts = AwsHelper.findEphemeralDrives()
     parts = parts.sort
 
     Chef::Log.info("Partitions to raid: #{parts.join(",")}")
